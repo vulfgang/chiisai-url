@@ -23,6 +23,11 @@ body {
 	padding: 0;
 }
 
+.main {
+	margin: 40px auto 0 auto;
+	text-align: center;
+}
+
 header {
 	color: #00BCD4;
 	height: 56px;
@@ -78,7 +83,7 @@ header a ~ p {
 /****** Login Styling ******/
 
 .login {
-	margin: 86px auto 0 auto;
+	margin: 40px auto 0 auto;
 	text-align: center;
 }
 
