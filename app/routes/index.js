@@ -19,20 +19,20 @@ module.exports = function (app) {
 
   app.get(url_to_shorten, function(req, res) {
     urlPeon.shorten(req, res);
-
-    // res.json({
-    //  "original_url": req.url,
-    //  "short_url":"https://chiisai-url.herokuapp.com/" + req.url.length
-    // });
   });
 
   app.get('/:url_id', function(req, res) {
     urlPeon.getUrlPairById(parseInt(req.params.url_id), function (err, urlPair) {
-      if (urlPair)
+      if (urlPair) {
+        var url = urlPair.original_url;
+
+        if (url.slice(0, 4) !== 'http')
+          url = 'http://' + url;
+
         res.redirect(url);
+      }
 
       res.end('<h3>No url with id '+req.params.url_id+'</h3>');
     });
-    // res.redirect('/');
   });
 };
