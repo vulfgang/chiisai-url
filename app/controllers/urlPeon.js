@@ -12,6 +12,8 @@ function UrlPeon () {
 
     // if the url has been shortened before, return the saved object
     UrlPair.findOne({'original_url': original}, function(err, urlPair) {
+      if (err) throw err;
+
       var result = { short_url: process.env.APP_URL };
 
       if (urlPair) {
@@ -26,7 +28,7 @@ function UrlPeon () {
 
       // if the url has not been shortened before, shorten now
       UrlPair.create({ original_url: original }, function(err, newPair) {
-        if (err && !newPair) throw err;
+        if (err) throw err;
 
         result.original_url = newPair.original_url;
         result.short_url += newPair.short_url;
@@ -37,12 +39,12 @@ function UrlPeon () {
         return res.json(result);
       });
     });
-
-    
   };
 
   this.getUrlPairById = function (id, callback) {
     UrlPair.findOne({ short_url: id }, function(err, urlPair) {
+      if (err) throw err;
+
       var result;
 
       if (urlPair)
@@ -52,6 +54,17 @@ function UrlPeon () {
         };
 
       callback(err, result);
+    });
+  };
+
+  this.getAllUrlPairs = function (req, res, callback) {
+    UrlPair.find({ /* get all */ }, function(err, urlPairs) {
+      if (err) throw err;
+
+      if (!callback)
+        return res.json({ allURLs: urlPairs });
+
+      callback(err, urlPairs);
     });
   };
 }

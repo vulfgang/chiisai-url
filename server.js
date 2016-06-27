@@ -13,6 +13,8 @@ app.use('/common', express.static(process.cwd() + '/app/common'));
 
 routes(app);
 
+app.set('json spaces', 2); // pretty printing!!!1!!1
+
 var port = process.env.PORT || 8080;
 app.listen(port,  function () {
 	console.log('Node.js listening on port ' + port + '...');

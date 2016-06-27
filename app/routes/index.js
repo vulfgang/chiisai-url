@@ -17,6 +17,22 @@ module.exports = function (app) {
     res.redirect('/');
   });
 
+  // mainly for testing purposes
+  app.get('/list', function (req, res) {
+    urlPeon.getAllUrlPairs(req, res, function(err, pairs) {
+      var list = {};
+
+      pairs.forEach(function (pair) {
+        list[pair.short_url] = {
+          original_url: pair.original_url,
+          short_url: process.env.APP_URL + pair.short_url
+        };
+      });
+
+      res.json(list);
+    });
+  });
+
   app.get(url_to_shorten, function(req, res) {
     urlPeon.shorten(req, res);
   });
