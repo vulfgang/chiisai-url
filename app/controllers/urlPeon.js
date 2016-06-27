@@ -6,6 +6,10 @@ function UrlPeon () {
   this.shorten = function (req, res, dontRespond) {
     var original = req.url.slice(1);
 
+    // make sure original url starts with http(s)
+    if (original.slice(0, 4) !== 'http')
+      original = 'http://' + original;
+
     // if the url has been shortened before, return the saved object
     UrlPair.findOne({'original_url': original}, function(err, urlPair) {
       var result = { short_url: process.env.APP_URL };

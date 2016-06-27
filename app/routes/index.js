@@ -23,14 +23,8 @@ module.exports = function (app) {
 
   app.get('/:url_id', function(req, res) {
     urlPeon.getUrlPairById(parseInt(req.params.url_id), function (err, urlPair) {
-      if (urlPair) {
-        var url = urlPair.original_url;
-
-        if (url.slice(0, 4) !== 'http')
-          url = 'http://' + url;
-
-        res.redirect(url);
-      }
+      if (urlPair)
+        res.redirect(urlPair.original_url);
 
       res.end('<h3>No url with id '+req.params.url_id+'</h3>');
     });
