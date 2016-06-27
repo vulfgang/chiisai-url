@@ -26,12 +26,6 @@ UrlPair.pre('validate', function(next) {
     function (err, idHelper) {
       if (err) return next(err);
       doc.short_url = idHelper.seq;
-
-      var url = doc.original_url;
-      
-      if (url.slice(0, 4) !== 'http')
-        url = 'http://' + url;
-
       next();
     }
   );
