@@ -21,12 +21,21 @@ module.exports = function (app) {
     urlPeon.shorten(req, res);
   });
 
+  // this route should also catch invalid URLs
   app.get('/:url_id', function(req, res) {
-    urlPeon.getUrlPairById(parseInt(req.params.url_id), function (err, urlPair) {
-      if (urlPair)
-        res.redirect(urlPair.original_url);
+    var url_id = req.params.url_id;
+    var id = parseInt(url_id);
+    if (isNaN(id)) id = -1;
 
-      res.end('<h3>No url with id '+req.params.url_id+'</h3>');
+    urlPeon.getUrlPairById(id, function (err, urlPair) {
+
+      if (urlPair)
+        return res.redirect(urlPair.original_url);
+
+      // if urlPair is not found or an invalid URL is entered
+      res.json({
+        error: 'Invalid URL or no shortened URL with id "'+url_id+'"'
+      });
     });
   });
 };
