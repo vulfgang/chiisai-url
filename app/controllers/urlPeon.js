@@ -12,31 +12,25 @@ function UrlPeon () {
         if (dontRespond)
           return urlPair;
 
-        res.json(urlPair);
+        return res.json(urlPair);
       }
-    });
 
-    // if the url has not been shortened before, shorten now
-    UrlPair.create({original_url: original}, function(err, newPair) {
-      if (err) throw err;
+      // if the url has not been shortened before, shorten now
+      UrlPair.create({original_url: original}, function(err, newPair) {
+        if (dontRespond)
+          return newPair.toObject();
 
-      newPair.update({
-        short_url: process.env.APP_URL + newPair.id
+        res.json(newPair.toObject());
       });
-
-      if (dontRespond)
-        return newPair.toObject();
-
-      res.json(newPair.toObject());
     });
+
+    
   };
 
-  this.getUrlPairById = function (id) {
-    UrlPair.findById(id, function(err, urlPair) {
-      if (urlPair)
-        urlPair = urlPair.toObject();
-
-      return urlPair;
+  this.getUrlPairById = function (id, callback) {
+    UrlPair.findOne({ short_url: id }, function(err, urlPair) {
+      console.log(JSON.stringify(urlPair));
+      callback(err, urlPair);
     });
   };
 }
