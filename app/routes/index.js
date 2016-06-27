@@ -1,9 +1,13 @@
 var path = process.cwd();
 
+var UrlPeon = require(path + '/app/controllers/urlPeon.js');
+
 // (not) the best url-matching regex
 var url_to_shorten = /^(https?:\/\/)?(.*?\.)*?.*?\..*?(\/.*?)?$/;
 
 module.exports = function (app) {
+	var urlPeon = new UrlPeon();
+
 	app.get('/', function (req, res) {
 		res.sendFile(path + '/public/index.html');
 	});
@@ -14,15 +18,19 @@ module.exports = function (app) {
 	});
 
 	app.get(url_to_shorten, function(req, res) {
-		// TODO: call url-shortener controller
-		res.json({
-			"original_url": req.url,
-			"short_url":"https://chiisai-url.herokuapp.com/" + req.url.length
-		});
+		urlPeon.shorten(req, res);
+
+		// res.json({
+		// 	"original_url": req.url,
+		// 	"short_url":"https://chiisai-url.herokuapp.com/" + req.url.length
+		// });
 	});
 
 	app.get('/:url_id', function(req, res) {
-		// TODO: call url redirect controller
-		res.redirect('/');
+		var urlPair = urlPeon.getUrlPairById(req.url_id);
+		if (urlPair)
+			res.redirect(urlPair.original_url);
+		res.end('<h3>No url with id '+req.url_id+'</h3>');
+		// res.redirect('/');
 	});
 };
