@@ -14,6 +14,11 @@ app.use('/common', express.static(process.cwd() + '/app/common'));
 routes(app);
 
 app.set('json spaces', 2); // pretty printing!!!1!!1
+app.use(function (req, res, next) {
+  res.status(404).json({
+    error: 'Invalid URL'
+  });
+});
 
 var port = process.env.PORT || 8080;
 app.listen(port,  function () {
